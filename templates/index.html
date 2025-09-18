@@ -4,118 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>California House Price Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: 500;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            padding: 14px 20px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
+        body { background-color: #f8f9fa; }
+        .container { max-width: 600px; }
+        .prediction-box { 
+            border: 2px solid #0d6efd; 
+            background-color: #e7f1ff;
+            color: #0a58ca;
+            font-size: 1.5rem;
             font-weight: bold;
-            transition: background-color 0.2s;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .prediction {
-            margin-top: 25px;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.25em;
-            font-weight: bold;
-            color: #2a9d8f;
-            background-color: #e9f5f4;
-            border-radius: 8px;
-            border: 1px solid #2a9d8f;
+        .error-box {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+            color: #842029;
+            font-size: 1rem;
+            font-weight: normal;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>California House Price Prediction</h2>
-        <form action="{{ url_for('predict') }}" method="post">
-            <label for="longitude">Longitude (e.g., -122.23)</label>
-            <input type="text" id="longitude" name="longitude" required>
-
-            <label for="latitude">Latitude (e.g., 37.88)</label>
-            <input type="text" id="latitude" name="latitude" required>
-
-            <label for="housing_median_age">Housing Median Age</label>
-            <input type="text" id="housing_median_age" name="housing_median_age" required>
-
-            <label for="total_rooms">Total Rooms</label>
-            <input type="text" id="total_rooms" name="total_rooms" required>
-
-            <label for="total_bedrooms">Total Bedrooms</label>
-            <input type="text" id="total_bedrooms" name="total_bedrooms" required>
-
-            <label for="population">Population</label>
-            <input type="text" id="population" name="population" required>
-
-            <label for="households">Households</label>
-            <input type="text" id="households" name="households" required>
-
-            <label for="median_income">Median Income (in tens of thousands)</label>
-            <input type="text" id="median_income" name="median_income" required>
-            
-            <label for="ocean_proximity">Ocean Proximity</label>
-            <select id="ocean_proximity" name="ocean_proximity">
-                <option value="<1H OCEAN">&lt;1H OCEAN</option>
-                <option value="INLAND">INLAND</option>
-                <option value="NEAR OCEAN">NEAR OCEAN</option>
-                <option value="NEAR BAY">NEAR BAY</option>
-                <option value="ISLAND">ISLAND</option>
-            </select>
-            
-            <button type="submit">Predict Price</button>
-        </form>
-        {% if prediction_text %}
-        <div class="prediction">
-            {{ prediction_text }}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">House Price Prediction</h1>
+        <div class="card p-4">
+            <form action="{{ url_for('predict') }}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ form_data.longitude or '-118.2' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ form_data.latitude or '34.05' }}" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="housing_median_age" class="form-label">Housing Median Age</label>
+                    <input type="number" step="any" class="form-control" id="housing_median_age" name="housing_median_age" value="{{ form_data.housing_median_age or '29' }}" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="total_rooms" class="form-label">Total Rooms</label>
+                        <input type="number" step="any" class="form-control" id="total_rooms" name="total_rooms" value="{{ form_data.total_rooms or '2635' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="total_bedrooms" class="form-label">Total Bedrooms</label>
+                        <input type="number" step="any" class="form-control" id="total_bedrooms" name="total_bedrooms" value="{{ form_data.total_bedrooms or '537' }}" required>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="population" class="form-label">Population</label>
+                        <input type="number" step="any" class="form-control" id="population" name="population" value="{{ form_data.population or '1425' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="households" class="form-label">Households</label>
+                        <input type="number" step="any" class="form-control" id="households" name="households" value="{{ form_data.households or '496' }}" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="median_income" class="form-label">Median Income (in tens of thousands)</label>
+                    <input type="number" step="any" class="form-control" id="median_income" name="median_income" value="{{ form_data.median_income or '3.8' }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ocean_proximity" class="form-label">Ocean Proximity</label>
+                    <select class="form-select" id="ocean_proximity" name="ocean_proximity" required>
+                        {% for option in ocean_proximity_options %}
+                            <option value="{{ option }}" {% if form_data and form_data.ocean_proximity == option %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Predict Price</button>
+                </div>
+            </form>
         </div>
+
+        {% if prediction_text %}
+            <div class="mt-4 p-3 text-center rounded 
+                {% if 'Error' in prediction_text %}error-box{% else %}prediction-box{% endif %}">
+                {{ prediction_text }}
+            </div>
         {% endif %}
     </div>
 </body>
