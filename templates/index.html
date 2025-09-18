@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California House Price Prediction</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 14px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .prediction {
+            margin-top: 25px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.25em;
+            font-weight: bold;
+            color: #2a9d8f;
+            background-color: #e9f5f4;
+            border-radius: 8px;
+            border: 1px solid #2a9d8f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>California House Price Prediction</h2>
+        <form action="{{ url_for('predict') }}" method="post">
+            <label for="longitude">Longitude (e.g., -122.23)</label>
+            <input type="text" id="longitude" name="longitude" required>
+
+            <label for="latitude">Latitude (e.g., 37.88)</label>
+            <input type="text" id="latitude" name="latitude" required>
+
+            <label for="housing_median_age">Housing Median Age</label>
+            <input type="text" id="housing_median_age" name="housing_median_age" required>
+
+            <label for="total_rooms">Total Rooms</label>
+            <input type="text" id="total_rooms" name="total_rooms" required>
+
+            <label for="total_bedrooms">Total Bedrooms</label>
+            <input type="text" id="total_bedrooms" name="total_bedrooms" required>
+
+            <label for="population">Population</label>
+            <input type="text" id="population" name="population" required>
+
+            <label for="households">Households</label>
+            <input type="text" id="households" name="households" required>
+
+            <label for="median_income">Median Income (in tens of thousands)</label>
+            <input type="text" id="median_income" name="median_income" required>
+            
+            <label for="ocean_proximity">Ocean Proximity</label>
+            <select id="ocean_proximity" name="ocean_proximity">
+                <option value="<1H OCEAN">&lt;1H OCEAN</option>
+                <option value="INLAND">INLAND</option>
+                <option value="NEAR OCEAN">NEAR OCEAN</option>
+                <option value="NEAR BAY">NEAR BAY</option>
+                <option value="ISLAND">ISLAND</option>
+            </select>
+            
+            <button type="submit">Predict Price</button>
+        </form>
+        {% if prediction_text %}
+        <div class="prediction">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
